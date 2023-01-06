@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "fastify": "^4.11.0",
-    "equity-scraper": "https://github.com/aidanjuma/equity-scraper.git"
+    "equity-scraper": "https://github.com/aidanjuma/equity-scraper.git#master"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

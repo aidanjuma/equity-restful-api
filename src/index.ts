@@ -1,4 +1,6 @@
 import fastify from "fastify";
+import crypto from "./routes/crypto";
+import fiat from "./routes/fiat";
 
 const server = fastify();
 
