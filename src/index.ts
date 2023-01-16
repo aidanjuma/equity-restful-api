@@ -1,17 +1,40 @@
-import fastify from "fastify";
+import Fastify from "fastify";
+import FastifyCors from "@fastify/cors";
 import crypto from "./routes/crypto";
 import fiat from "./routes/fiat";
 
-const server = fastify();
+(async () => {
+  const fastify = Fastify({
+    maxParamLength: 1000,
+    logger: true,
+  });
 
-server.get("/ping", async (request, reply) => {
-  return "pong\n";
-});
+  await fastify.register(FastifyCors, {
+    origin: "*",
+    methods: "GET",
+  });
 
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err);
+  await fastify.register(crypto, { prefix: "/crypto" });
+  await fastify.register(fiat, { prefix: "/fiat" });
+
+  try {
+    fastify.get("/", (_, rp) => {
+      rp.status(200).send("Welcome the the Equity Finance API! 🤑");
+    });
+
+    fastify.get("*", (request, reply) => {
+      reply.status(404).send({
+        errorCode: 404,
+        message: "Page not found. Please try a different route.",
+      });
+    });
+
+    fastify.listen({ port: 3000, host: "0.0.0.0" }, (e, address) => {
+      if (e) throw e;
+      console.log(`Fastify listening on "${address}".`);
+    });
+  } catch (err: any) {
+    fastify.log.error(err);
     process.exit(1);
   }
-  console.log(`Server listening at ${address}`);
-});
+})();

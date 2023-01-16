@@ -1,5 +1,5 @@
 import GoogleFinance from "equity-scraper/dist/providers/fiat";
-import fastify, {
+import {
   FastifyRequest,
   FastifyReply,
   FastifyInstance,
