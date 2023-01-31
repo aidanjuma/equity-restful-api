@@ -1,6 +1,14 @@
-import { FastifyInstance, RegisterOptions } from "fastify";
+import {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  RegisterOptions,
+} from "fastify";
 
+import google from "./googlefinance";
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
+  await fastify.register(google, { prefix: "/google" });
+
   fastify.get("/", (_, rp) => {
     rp.status(200).send({
       intro:
@@ -8,6 +16,31 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       routes: ["/google"],
     });
   });
+
+  fastify.get(
+    "/:fiatProvider",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const queries: { fiatProvider: string } = { fiatProvider: "" };
+
+      queries.fiatProvider = decodeURIComponent(
+        (request.params as { fiatProvider: string }).fiatProvider
+      );
+
+      try {
+        // TODO: Redirect if in PROVIDERS_LIST (create).
+        if (queries.fiatProvider === "google") {
+          reply.redirect(`/fiat/${queries.fiatProvider}`);
+        } else {
+          reply.status(404).send({
+            message:
+              "Not a valid provider; please try a different value for provider.",
+          });
+        }
+      } catch (err) {
+        reply.status(500).send("Something went wrong. Please try again later.");
+      }
+    }
+  );
 };
 
 export default routes;
