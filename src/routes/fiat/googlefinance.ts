@@ -17,17 +17,17 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   });
 
   fastify.get(
-    "/:query",
+    "/search/:query",
     async (request: FastifyRequest, reply: FastifyReply) => {}
   );
 
   fastify.get(
-    "/:ticker",
+    "/ticker/:ticker",
     async (request: FastifyRequest, reply: FastifyReply) => {}
   );
 
   fastify.get(
-    "/:currency",
+    "/currency/:ticker",
     async (request: FastifyRequest, reply: FastifyReply) => {}
   );
 };
