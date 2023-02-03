@@ -12,9 +12,19 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   fastify.get("/", (_, rp) => {
     rp.status(200).send({
       intro: `Welcome to the Google Finance provider for the Equity API! Check out the provider's own website at ${googleFinance.toString.baseUrl} The available routes are listed below.`,
-      routes: ["/:query", "/:ticker", "/:currency"],
+      routes: [
+        "/assets",
+        "/search/:query",
+        "/asset/:ticker",
+        "/currency/:ticker",
+      ],
     });
   });
+
+  fastify.get(
+    "/assets",
+    async (request: FastifyRequest, reply: FastifyReply) => {}
+  );
 
   fastify.get(
     "/search/:query",
