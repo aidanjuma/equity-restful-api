@@ -23,7 +23,23 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
   fastify.get(
     "/assets",
-    async (request: FastifyRequest, reply: FastifyReply) => {}
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const QUERIES = request.query as { limit: string; offset: string };
+
+      let limit: number | undefined = parseInt(
+        decodeURIComponent(QUERIES.limit)
+      );
+      isNaN(limit) ? (limit = undefined) : null;
+
+      let offset: number | undefined = parseInt(
+        decodeURIComponent(QUERIES.offset)
+      );
+      isNaN(offset) ? (offset = undefined) : null;
+
+      const assets = await googleFinance.getAvailableAssets(limit, offset);
+
+      reply.status(200).send(assets);
+    }
   );
 
   fastify.get(
@@ -32,13 +48,25 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   );
 
   fastify.get(
-    "/ticker/:ticker",
-    async (request: FastifyRequest, reply: FastifyReply) => {}
+    "/asset/:ticker",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const ticker: string = decodeURIComponent(
+        (request.params as { ticker: string }).ticker
+      );
+
+      // TODO!
+    }
   );
 
   fastify.get(
     "/currency/:ticker",
-    async (request: FastifyRequest, reply: FastifyReply) => {}
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const ticker: string = decodeURIComponent(
+        (request.params as { ticker: string }).ticker
+      );
+
+      // TODO!
+    }
   );
 };
 

@@ -20,16 +20,14 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   fastify.get(
     "/:fiatProvider",
     async (request: FastifyRequest, reply: FastifyReply) => {
-      const queries: { fiatProvider: string } = { fiatProvider: "" };
-
-      queries.fiatProvider = decodeURIComponent(
+      const fiatProvider = decodeURIComponent(
         (request.params as { fiatProvider: string }).fiatProvider
       );
 
       try {
         // TODO: Redirect if in PROVIDERS_LIST (create).
-        if (queries.fiatProvider === "google") {
-          reply.redirect(`/fiat/${queries.fiatProvider}`);
+        if (fiatProvider === "google") {
+          reply.redirect(`/fiat/${fiatProvider}`);
         } else {
           reply.status(404).send({
             message:

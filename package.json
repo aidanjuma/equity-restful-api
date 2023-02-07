@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@fastify/cors": "^8.2.0",
-    "equity-scraper": "https://github.com/aidanjuma/equity-scraper.git#master",
+    "equity-scraper": "https://github.com/aidanjuma/equity-scraper.git",
     "fastify": "^4.11.0"
   },
   "devDependencies": {
