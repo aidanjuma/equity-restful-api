@@ -6,6 +6,7 @@ import {
   RegisterOptions,
 } from "fastify";
 
+// TODO: Improve error handling...
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   const googleFinance = new GoogleFinance();
 
@@ -14,6 +15,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       intro: `Welcome to the Google Finance provider for the Equity API! Check out the provider's own website at ${googleFinance.toString.baseUrl} The available routes are listed below.`,
       routes: [
         "/assets",
+        "/news",
         "/search/:query",
         "/asset/:ticker",
         "/currency/:ticker",
@@ -42,9 +44,21 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     }
   );
 
+  fastify.get("/news", async (request: FastifyRequest, reply: FastifyReply) => {
+    const news = await googleFinance.getLatestNews();
+
+    reply.status(200).send(news);
+  });
+
   fastify.get(
     "/search/:query",
-    async (request: FastifyRequest, reply: FastifyReply) => {}
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const query: string = decodeURIComponent(
+        (request.params as { query: string }).query
+      );
+
+      // TODO!
+    }
   );
 
   fastify.get(
@@ -54,7 +68,9 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         (request.params as { ticker: string }).ticker
       );
 
-      // TODO!
+      const assetData = await googleFinance.getAssetData(ticker);
+
+      reply.status(200).send(assetData);
     }
   );
 
