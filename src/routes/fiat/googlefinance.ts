@@ -90,7 +90,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
       const results: IGoogleFinanceAsset[] = matches.map((i) => assets[i]);
 
-      reply.status(200).send(results);
+      reply.status(200).send({ results: results });
     }
   );
 
