@@ -106,17 +106,6 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       reply.status(200).send(assetData);
     }
   );
-
-  fastify.get(
-    "/currency/:ticker",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const ticker: string = decodeURIComponent(
-        (request.params as { ticker: string }).ticker
-      );
-
-      // TODO!
-    }
-  );
 };
 
 export default routes;
