@@ -32,6 +32,13 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         (request.params as { query: string }).query
       ).toUpperCase();
 
+      if (query.length > 255)
+        reply
+          .status(500)
+          .send(
+            `500: The query ${query} is too long (greater than 255 characters). Please try a shorter query.`
+          );
+
       const assets: IBinanceAsset[] = await binance.getAvailableAssets();
 
       /*

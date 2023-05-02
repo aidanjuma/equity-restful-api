@@ -8,20 +8,13 @@ import {
   RegisterOptions,
 } from "fastify";
 
-// TODO: Improve error handling...
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   const googleFinance = new GoogleFinance();
 
   fastify.get("/", (_, rp) => {
     rp.status(200).send({
       intro: `Welcome to the Google Finance provider for the Equity API! Check out the provider's own website at ${googleFinance.toString.baseUrl} The available routes are listed below.`,
-      routes: [
-        "/assets",
-        "/news",
-        "/search/:query",
-        "/asset/:ticker",
-        "/currency/:ticker",
-      ],
+      routes: ["/assets", "/news", "/search/:query", "/asset/:ticker"],
     });
   });
 
@@ -58,6 +51,13 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       const query: string = decodeURIComponent(
         (request.params as { query: string }).query
       ).toUpperCase();
+
+      if (query.length > 255)
+        reply
+          .status(500)
+          .send(
+            `500: The query ${query} is too long (greater than 255 characters). Please try a shorter query.`
+          );
 
       const assets: IGoogleFinanceAsset[] =
         await googleFinance.getAvailableAssets();
